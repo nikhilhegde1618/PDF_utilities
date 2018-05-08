@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.pdfController">
+   <children>
+      <Label fx:id="smin" text="Label">
+         <HBox.margin>
+            <Insets left="80.0" top="50.0" />
+         </HBox.margin>
+      </Label>
+      <VBox>
+         <children>
+            <Slider fx:id="slider" blockIncrement="0.0" layoutX="50.0" layoutY="30.0">
+               <HBox.margin>
+                  <Insets left="185.0" right="85.0" top="30.0" />
+               </HBox.margin>
+               <VBox.margin>
+                  <Insets left="90.0" right="90.0" top="50.0" />
+               </VBox.margin>
+            </Slider>
+            <Label fx:id="sval" text="Label">
+               <VBox.margin>
+                  <Insets left="145.0" top="30.0" />
+               </VBox.margin>
+            </Label>
+            <Button fx:id="splitNow" mnemonicParsing="false" text="SPLIT">
+               <VBox.margin>
+                  <Insets left="140.0" top="30.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <Label fx:id="smax" layoutX="10.0" layoutY="10.0" text="Label">
+         <HBox.margin>
+            <Insets top="50.0" />
+         </HBox.margin>
+      </Label>
+   </children>
+</HBox>
