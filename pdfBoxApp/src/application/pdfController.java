@@ -59,7 +59,8 @@ class Alert{
 	    	Label alertMsg = (Label)alertroot.lookup("#successMsg");
 	    	done.setText(heading);
 			alertMsg.setText(msg);
-			stageAlert.setScene(new Scene(alertroot, 400, 100));
+			alertMsg.setWrapText(true);
+			stageAlert.setScene(new Scene(alertroot, 400, 220));
 	        stageAlert.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,34 +71,34 @@ class Alert{
  * The method for conversion executes progress indicator
  * while the class renders each page of pdf to images
  */
-class ConvertToImg extends Task{
-	String filepath, filename;
-	@Override
-	protected Object call() throws Exception {
-		int count = 0;
-		File file = new File(filepath) ;
-		PDDocument document = PDDocument.load(file);
-		//Instantiating the PDFRenderer class
-	    PDFRenderer renderer = new PDFRenderer(document);
-	    count = document.getNumberOfPages();
-		for (int page = 0; page < document.getNumberOfPages(); ++page){
-			//update progress of the progress indicator
-			this.updateProgress(page, count);
-	    	BufferedImage image = renderer.renderImage(page);
-		    //Writing the image to a file
-	    	String fname = filename+"_"+(page+1)+".jpg";
-		    ImageIO.write(image, "JPEG", new File(fname));
-	    }
-		document.close();
-		return count;
-	}
-	//constructor to initialize filepath and filename of the pdf
-	ConvertToImg(String fp, String fn){
-		this.filename = fn;
-		this.filepath = fp;
-	}
-	
-}
+//class ConvertToImg extends Task{
+//	String filepath, filename;
+//	@Override
+//	protected Object call() throws Exception {
+//		int count = 0;
+//		File file = new File(filepath) ;
+//		PDDocument document = PDDocument.load(file);
+//		//Instantiating the PDFRenderer class
+//	    PDFRenderer renderer = new PDFRenderer(document);
+//	    count = document.getNumberOfPages();
+//		for (int page = 0; page < document.getNumberOfPages(); ++page){
+//			//update progress of the progress indicator
+//			this.updateProgress(page, count);
+//	    	BufferedImage image = renderer.renderImage(page);
+//		    //Writing the image to a file
+//	    	String fname = filename+"_"+(page+1)+".jpg";
+//		    ImageIO.write(image, "JPEG", new File(fname));
+//	    }
+//		document.close();
+//		return count;
+//	}
+//	//constructor to initialize filepath and filename of the pdf
+//	ConvertToImg(String fp, String fn){
+//		this.filename = fn;
+//		this.filepath = fp;
+//	}
+//
+//}
 public class pdfController implements Initializable{
 	//Controls
 	@FXML
@@ -198,7 +199,6 @@ public class pdfController implements Initializable{
 	        sval.setText(String.valueOf((int) slider.getValue()));
 	        
 	        slider.valueProperty().addListener(new ChangeListener<Object>(){
-
 				@Override
 				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
 					sval.setText(String.valueOf((int) slider.getValue()));
@@ -331,14 +331,14 @@ public class pdfController implements Initializable{
 		
 	}
 	//handler for getting text from pdf, called when upload button is clicked
-	public void getText(){
+	public void toText(){
 		String filePath = selectFile();
 		filePath = filePath.substring(5);
 		int position = filePath.lastIndexOf("/");
 		String path = filePath.substring(0, position);
 		
 		String fileName = filePath.substring(position+1);
-		extractL1.setText("File selected: "+ fileName);
+//		extractL1.setText("File selected: "+ fileName);
 		
 		try {
 			String fp = filePath;
@@ -354,12 +354,12 @@ public class pdfController implements Initializable{
 		    FileOutputStream fos = new FileOutputStream(filename);
 		    PrintStream ps = new PrintStream(fos);
 		    ps.println(text);
-		    extractL1.setText("");
+//		    extractL1.setText("");
 		    Alert a =new Alert("DONE !", "Extracted the pdf to a text file titled converted.");
 		    document.close();
 		}catch (Exception e) {
 			e.printStackTrace();
-			extractL1.setText("");
+//			extractL1.setText("");
 			Alert a =new Alert("ERROR !", "Unable to extract text.");
 		}
 		
@@ -550,136 +550,13 @@ public class pdfController implements Initializable{
 	 * page numbers are modified by -1 as indexing starts at 0
 	 * we add these pages into a new document and save it
 	 */
-	public int extract(String filePath, String pages) throws  IOException{
-		int ret = 0;
-		int position = filePath.lastIndexOf("/");
-		String path = filePath.substring(0, position);
-		String fileName = filePath.substring(position+1);
-		File file = new File(filePath) ;
-		PDDocument document = PDDocument.load(file);
-		PDDocument newdocument = new PDDocument();
-		//get page numbers
-		StringTokenizer st = new StringTokenizer(pages, ",");
-		String pageArray[];
-		int numPages = document.getNumberOfPages();
-		int pageNos[] = new int[numPages];
-		//initialize array
-		for(int j=0; j<numPages; j++){
-			pageNos[j] = -1;
-		}
-		int i=0;
-		//get page numbers from string
-		while(st.hasMoreTokens()){
-			//check if it is a range
-			String str = st.nextToken();
-			if(str.contains("-")){
-				pageArray = str.split("-");
-				int start, end;
-				start = Integer.parseInt(pageArray[0]);
-				end  = Integer.parseInt(pageArray[1]);
-				for(int j=start;j<=end;j++){
-					pageNos[i] = j-1;
-					i++;
-				}
-			}else{
-				pageNos[i] = Integer.parseInt(str);
-				pageNos[i] = pageNos[i]-1;//fix pagenumber indexing
-				i++;
-			}
-		}
-		for(int j=0; j<pageNos.length; j++){
-			if(pageNos[j]<0)break;
-			//System.out.println(pageNos[j]) ;
-			PDPage p = document.getPage(pageNos[j]);
-			newdocument.addPage(p);
-		}
-		String timeStamp = new SimpleDateFormat("yy_MM_dd_HH_mm_ss").format(new Date());
-		String destination = path + "/extracted_"+fileName+"_"+timeStamp+".pdf";
-		newdocument.save(destination);
-		document.close();
-		newdocument.close();
-		ret = 1;
-		return ret;
-	}
+
 	//NOT DOING
-	public void appendPage(){
-		
-	}
 	//handler for extracting pages from pdf, called when upload button is clicked
-	public void extractPage(){
-		String filePath = selectFile();
-		filePath = filePath.substring(5);
-		int position = filePath.lastIndexOf("/");
-		String path = filePath.substring(0, position);
-		final String fp = filePath;
-		String fileName = filePath.substring(position+1);
-		extract.setText("File selected: "+ fileName);
-		pages.setVisible(true);
-		
-		submitNos.setVisible(true);
-		submitNos.setOnAction(new EventHandler<ActionEvent>(){
-			
-			@Override
-			public void handle(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				String page = pages.getText();
-				pages.setVisible(false);
-				submitNos.setVisible(false);
-				int retVal = 0;
-				try{ 
-					retVal = extract(fp, page);
-					if(retVal == 1){
-						extract.setText("");
-						Alert a =new Alert("Done !", "Pages extracted.");
-					}else{
-						extract.setText("");
-						Alert a =new Alert("ERROR !", "Unable to extract pages.");
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-					extract.setText("");
-					Alert a =new Alert("ERROR !", "Unable to extract pages.");
-				}
-				
-			}});
-	}
+
 	//handler for converting images to pdf, called when upload button is clicked
 	/*Get the image, create a new Page with a rectangle sized equal to the image
 	 * Create an image object from the file and write to the document
 	 */
-	public void convertJtoP(){
-		String filePath = selectImg();
-		filePath = filePath.substring(5);
-		int position = filePath.lastIndexOf("/");
-		String path = filePath.substring(0, position);
-		
-		String fileName = filePath.substring(position+1);
-		imgPdfL.setText("File selected: "+ fileName);
-		
-		try {
-			String fp = filePath;
-			String filename = path+"/"+fileName+".pdf";
-			PDDocument document = new PDDocument();
-			InputStream in = new FileInputStream(filePath);
-			BufferedImage bimg = ImageIO.read(in);
-			float width = bimg.getWidth();
-			float height = bimg.getHeight();
-			PDPage page = new PDPage(new PDRectangle(width, height));
-			document.addPage(page); 
-			PDImageXObject img = PDImageXObject.createFromFile(filePath, document);
-			PDPageContentStream contentStream = new PDPageContentStream(document, page);
-			contentStream.drawImage(img, 0, 0);
-			contentStream.close();
-			in.close();
-			document.save(filename);
-			document.close();
-		    imgPdfL.setText("");
-		    Alert a =new Alert("DONE !", "converted image to pdf");
-		    document.close();
-		}catch (Exception e) {
-			e.printStackTrace();
-			imgPdfL.setText("");
-			Alert a =new Alert("ERROR !", "Unable to convert.");
-		}
-	}
+
 }
