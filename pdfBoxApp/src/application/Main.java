@@ -40,7 +40,6 @@ public class Main extends Application {
             title.setTextFill(Color.rgb(4,30,66));
             vb.getChildren().add(title);
             vb.getChildren().add(new Separator());
-            pdfController p = new pdfController();
             Accordion accordion = new Accordion();
 
             //split pdf

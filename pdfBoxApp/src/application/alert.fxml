@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.*?>
 
 
-<VBox prefHeight="111.0" prefWidth="332.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.pdfController">
+<VBox prefHeight="111.0" prefWidth="332.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="done" alignment="CENTER" contentDisplay="CENTER" prefHeight="74.0" prefWidth="170.0" text="DONE !" textAlignment="CENTER">
          <font>
-            <Font size="24.0" />
+            <Font size="25.0" />
          </font>
          <VBox.margin>
             <Insets left="50.0" right="50.0" />
