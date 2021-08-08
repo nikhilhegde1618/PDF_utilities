@@ -20,4 +20,3 @@ Implemented :
 
   7. Extract pages from a pdf
   
-  Designed using fxml
