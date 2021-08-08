@@ -244,7 +244,7 @@ public class Main extends Application {
             submitPwd.setLayoutX(516);
             submitPwd.setLayoutY(56);
             encryptBut.setOnAction((event7_1) -> {
-                String fpath = enp.selectFile();
+                String fpath = fsObj.selectFile();
                 submitPwd.setOnAction((event7_2) -> {
                     String pwd = usrPwd.getText();
                     enp.encryptPdf(fpath,pwd);

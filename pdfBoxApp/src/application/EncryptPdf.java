@@ -13,26 +13,6 @@ import java.util.regex.Pattern;
 public class EncryptPdf {
     private String regex = "^(?=.*[0-9])" + "(?=.*[a-z])(?=.*[A-Z])" + "(?=.*[@#$%^&+=])" + "(?=\\S+$).{8,20}$";
 
-    public String selectFile(){
-        String s;
-        FileChooser fc=new FileChooser();
-        FileChooser.ExtensionFilter extFilter =
-                new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
-        fc.getExtensionFilters().add(extFilter);
-        File selectedFile=fc.showOpenDialog(null);
-        if(selectedFile !=null){
-            s=selectedFile.getAbsolutePath();
-            //modify path to change \ to /
-            s="file:"+s.replaceAll("\\\\", "/");
-            System.out.println(s);
-        }
-        else {
-            s = "Error";
-            System.out.println("invalid file");
-        }
-        return s;
-    }
-
     public void encryptPdf(String filePath, String pwd){
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(pwd);
